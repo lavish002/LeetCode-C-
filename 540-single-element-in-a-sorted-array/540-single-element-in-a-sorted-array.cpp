@@ -10,7 +10,7 @@ public:
             if(mid%2==1){
                 if(mid!=0 && nums[mid-1]==nums[mid])
                     left = mid+1;
-                else if(mid!=n && nums[mid+1]==nums[mid])
+                else if(nums[mid+1]==nums[mid])
                     right = mid-1;
                 else{
                     ans=nums[mid];
@@ -18,7 +18,7 @@ public:
                 }
             }
             else{
-                if(mid!=n && nums[mid+1]==nums[mid])
+                if(nums[mid+1]==nums[mid])
                     left = mid+1;
                 else if(mid!=0 && nums[mid-1]==nums[mid])
                     right = mid-1;
