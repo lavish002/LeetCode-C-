@@ -1,34 +1,35 @@
-class Data {
+class NodeValue {
 public:
-int mx;
-int mn;
-bool isBST;
-int sum;
+int maxNode, minNode, maxSize;
+NodeValue(int minNode, int maxNode, int maxSize) {
+this->maxNode = maxNode;
+this->minNode = minNode;
+this->maxSize = maxSize;
+}
 };
+​
 class Solution {
+private:
+​
+NodeValue largestBSTSubtreeHelper(TreeNode* root) {
+// An empty tree is a BST of size 0.
+if (!root) {
+return NodeValue(INT_MAX, INT_MIN, 0);
+}
+// Get values from left and right subtree of current tree.
+auto left = largestBSTSubtreeHelper(root->left);
+auto right = largestBSTSubtreeHelper(root->right);
+// Current node is greater than max in left AND smaller than min in right, it is a BST.
+if (left.maxNode < root->val && root->val < right.minNode) {
+// It is a BST.
+return NodeValue(min(root->val, left.minNode), max(root->val, right.maxNode),
+left.maxSize + right.maxSize + 1);
+}
+// Otherwise, return [-inf, inf] so that parent can't be valid BST
+return NodeValue(INT_MIN, INT_MAX, max(left.maxSize, right.maxSize));
+}
 public:
-Data solve(TreeNode* root, int &maxsum){
-if(!root) return {INT_MIN,INT_MAX,true,0};
-Data left=solve(root->left,maxsum);
-Data right=solve(root->right,maxsum);
-Data currData;
-currData.sum=left.sum + right.sum +root->val;
-currData.mx=max(root->val,right.mx);
-currData.mn=min(root->val,left.mn);
-if(left.isBST && right.isBST &&(root->val>left.mx && root->val<right.mn)){
-currData.isBST=true;
-}
-else{
-currData.isBST=false;
-}
-if(currData.isBST){
-maxsum=max(maxsum,currData.sum);
-}
-return currData;
-}
-int maxSumBST(TreeNode* root) {
-int maxsum = 0;
-Data temp = solve(root,maxsum);
-return maxsum;
+int largestBSTSubtree(TreeNode* root) {
+return largestBSTSubtreeHelper(root).maxSize;
 }
 };
